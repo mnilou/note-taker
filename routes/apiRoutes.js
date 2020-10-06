@@ -5,23 +5,23 @@ const notes = require("../db/notes");
 router.get("/notes", (req, res) => {
   notes
     .getNotes()
-    .then((notes) => res.json(notes))
-    .catch((err) => res.status(500).json(err));
+    .then(notes => res.json(notes))
+    .catch(err => res.status(500).json(err));
 });
 
-router.post("/notes", (req, res) => {
+router.post("/notes", ({ body }, res) => {
   notes
-    .addNote(req.body)
-    .then((note) => res.json(note))
-    .catch((err) => res.status(500).json(err));
+    .addNote(body)
+    .then(note => res.json(note))
+    .catch(err => res.status(500).json(err));
 });
 
 // DELETE "/api/notes" deletes the note with an id equal to req.params.id
-router.delete("/notes/:id", (req, res) => {
+router.delete("/notes/:id", ({ params }, res) => {
   notes
-    .removeNote(req.params.id)
+    .removeNote(params.id)
     .then(() => res.json({ ok: true }))
-    .catch((err) => res.status(500).json(err));
+    .catch(err => res.status(500).json(err));
 });
 
 module.exports = router;
