@@ -1,13 +1,11 @@
 const util = require("util");
 const fs = require("fs");
-
-// This package will be used to generate our unique ids. https://www.npmjs.com/package/uuid
 const { v4: uuidv4 }= require("uuid");
 
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
 
-class Store {
+class Notes {
   read() {
     return readFileAsync("db/db.json", "utf8");
   }
@@ -17,17 +15,17 @@ class Store {
   }
 
   getNotes() {
-    return this.read().then((notes) => {
-      let parsedNotes;
+    return this.read().then(notes => {
+      let readNotes;
 
       // If notes isn't an array or can't be turned into one, send back a new empty array
       try {
-        parsedNotes = [].concat(JSON.parse(notes));
+        readNotes = [].concat(JSON.parse(notes));
       } catch (err) {
-        parsedNotes = [];
+        readNotes = [];
       }
 
-      return parsedNotes;
+      return readNotes;
     });
   }
 
@@ -43,8 +41,8 @@ class Store {
 
     // Get all notes, add the new note, write all the updated notes, return the newNote
     return this.getNotes()
-      .then((notes) => [...notes, newNote])
-      .then((updatedNotes) => this.write(updatedNotes))
+      .then(notes => [...notes, newNote])
+      .then(updatedNotes => this.write(updatedNotes))
       .then(() => newNote);
   }
 
